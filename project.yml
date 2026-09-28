@@ -1,0 +1,24 @@
+name: XCodeWinStarter
+options:
+  bundleIdPrefix: com.rayan
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    IPHONEOS_DEPLOYMENT_TARGET: 16.0
+
+targets:
+  XCodeWinStarter:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - StarterApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.rayan.xcodewinstarter
+        PRODUCT_NAME: XCodeWinStarter
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGN_IDENTITY: ""

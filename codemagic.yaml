@@ -1,0 +1,37 @@
+workflows:
+  ios-starter-unsigned:
+    name: iOS Starter - Unsigned IPA
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      xcode: latest
+    scripts:
+      - name: Install XcodeGen
+        script: |
+          brew install xcodegen || true
+
+      - name: Generate Xcode project
+        script: |
+          cd "$CM_BUILD_DIR"
+          xcodegen generate
+
+      - name: Build app without signing
+        script: |
+          cd "$CM_BUILD_DIR"
+          rm -rf build Payload XCodeWinStarter.ipa
+          xcodebuild             -project XCodeWinStarter.xcodeproj             -scheme XCodeWinStarter             -configuration Release             -sdk iphoneos             -derivedDataPath build             CODE_SIGNING_ALLOWED=NO             CODE_SIGNING_REQUIRED=NO             CODE_SIGN_IDENTITY=""             build
+
+      - name: Package unsigned IPA
+        script: |
+          cd "$CM_BUILD_DIR"
+          APP_PATH=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" -print -quit)
+          test -n "$APP_PATH"
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          /usr/bin/zip -qry XCodeWinStarter.ipa Payload
+          ls -lh XCodeWinStarter.ipa
+
+    artifacts:
+      - XCodeWinStarter.ipa
+      - build/Build/Products/Release-iphoneos/*.app
+      - /tmp/xcodebuild_logs/*.log
